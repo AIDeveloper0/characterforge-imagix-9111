@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronRight, HomeIcon, Users, Video, Image, Edit, Palette, Grid, LayoutGrid, Rss, Code, ChevronDown, BookOpen, HelpCircle, Sparkles, Palette as ThemeIcon, Newspaper, Clock, Bookmark, Heart, Album, Boxes } from "lucide-react";
 
 type SidebarItemProps = {
@@ -49,11 +50,28 @@ const DropdownItem = ({ icon, label, isExternal = false, isActive = false, onCli
 );
 
 export const Sidebar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [myStuffOpen, setMyStuffOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState("Home");
   const [activeDropdownItem, setActiveDropdownItem] = useState("");
+
+  // Determine active item based on current route
+  const getActiveItem = () => {
+    switch (location.pathname) {
+      case "/": return "Home";
+      case "/characters": return "Characters";
+      default: return "Home";
+    }
+  };
+  
+  const activeItem = getActiveItem();
+  
+  // Handler for menu items that don't have routes yet
+  const handleMenuClick = (item: string) => {
+    console.log(`${item} clicked - feature not implemented yet`);
+  };
 
   if (isCollapsed) {
     return (
@@ -91,62 +109,62 @@ export const Sidebar = () => {
           icon={<HomeIcon size={20} />} 
           label="Home" 
           isActive={activeItem === "Home"}
-          onClick={() => setActiveItem("Home")}
+          onClick={() => navigate("/")}
         />
         <SidebarItem 
           icon={<Users size={20} />} 
           label="Characters" 
           isNew 
           isActive={activeItem === "Characters"}
-          onClick={() => setActiveItem("Characters")}
+          onClick={() => navigate("/characters")}
         />
         <SidebarItem 
           icon={<Video size={20} />} 
           label="Videos" 
-          isActive={activeItem === "Videos"}
-          onClick={() => setActiveItem("Videos")}
+          isActive={false}
+          onClick={() => handleMenuClick("Videos")}
         />
         <SidebarItem 
           icon={<Image size={20} />} 
           label="Create Image" 
-          isActive={activeItem === "Create Image"}
-          onClick={() => setActiveItem("Create Image")}
+          isActive={false}
+          onClick={() => handleMenuClick("Create Image")}
         />
         <SidebarItem 
           icon={<Edit size={20} />} 
           label="Edit Image" 
-          isActive={activeItem === "Edit Image"}
-          onClick={() => setActiveItem("Edit Image")}
+          isActive={false}
+          onClick={() => handleMenuClick("Edit Image")}
         />
         <SidebarItem 
           icon={<Palette size={20} />} 
           label="Style Palettes" 
-          isActive={activeItem === "Style Palettes"}
-          onClick={() => setActiveItem("Style Palettes")}
+          isActive={false}
+          onClick={() => handleMenuClick("Style Palettes")}
         />
         <SidebarItem 
           icon={<Grid size={20} />} 
           label="Models" 
-          isActive={activeItem === "Models"}
-          onClick={() => setActiveItem("Models")}
+          isActive={false}
+          onClick={() => handleMenuClick("Models")}
         />
         <SidebarItem 
           icon={<LayoutGrid size={20} />} 
           label="Apps" 
-          isActive={activeItem === "Apps"}
-          onClick={() => setActiveItem("Apps")}
+          isActive={false}
+          onClick={() => handleMenuClick("Apps")}
         />
         <SidebarItem 
           icon={<Rss size={20} />} 
           label="Community Feed" 
-          isActive={activeItem === "Community Feed"}
-          onClick={() => setActiveItem("Community Feed")}
+          isActive={false}
+          onClick={() => handleMenuClick("Community Feed")}
         />
         <SidebarItem 
           icon={<Code size={20} />} 
           label="ComfyUI Workflows" 
-          isActive={activeItem === "ComfyUI Workflows"}
-          onClick={() => setActiveItem("ComfyUI Workflows")}
+          isActive={false}
+          onClick={() => handleMenuClick("ComfyUI Workflows")}
         />
       </div>
 
@@ -155,11 +173,10 @@ export const Sidebar = () => {
           <SidebarItem 
             icon={myStuffOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
             label="My stuff" 
-            isActive={activeItem === "My stuff"}
+            isActive={false}
             hasDropdown
             onClick={() => {
               setMyStuffOpen(!myStuffOpen);
-              setActiveItem("My stuff");
             }}
           />
 
@@ -204,10 +221,9 @@ export const Sidebar = () => {
             icon={resourcesOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
             label="Resources" 
             hasDropdown
-            isActive={activeItem === "Resources"}
+            isActive={false}
             onClick={() => {
               setResourcesOpen(!resourcesOpen);
-              setActiveItem("Resources");
             }}
           />
           
